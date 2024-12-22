@@ -12,6 +12,7 @@ import chalk from "chalk";
 import fs from "fs/promises";
 import path from "path";
 import { Ocr } from "./ocr";
+import { Common } from "./common";
 
 type Format = "text" | "json" | "markdown";
 
@@ -35,7 +36,6 @@ export class Cli {
       showVersion: args.includes("-v") || args.includes("--version"),
     };
 
-    // Handle format flag
     const formatIndex = args.findIndex(
       (arg) => arg === "-t" || arg === "--type"
     );
@@ -47,9 +47,10 @@ export class Cli {
       }
     }
 
-    // Get image path from remaining args
     if (args.length > 0) {
-      options.imagePath = path.resolve(args[0]);
+      options.imagePath = Common.isUrl(args[0])
+        ? args[0]
+        : path.resolve(args[0]);
     }
 
     return options;
@@ -92,17 +93,20 @@ export class Cli {
    * Validate and process the image file
    */
   private async processImage(
-    imagePath: string,
+    imageSource: string,
     format: Format = "text"
   ): Promise<void> {
     try {
-      const stats = await fs.stat(imagePath);
-      if (!stats.isFile()) {
-        throw new Error("Path exists but is not a file");
+      // For URLs, skip the file system checks
+      if (!Common.isUrl(imageSource)) {
+        const stats = await fs.stat(imageSource);
+        if (!stats.isFile()) {
+          throw new Error("Path exists but is not a file");
+        }
       }
 
-      console.log(chalk.green(`Processing image: ${imagePath}`));
-      const ocr = new Ocr(imagePath);
+      console.log(chalk.green(`Processing image: ${imageSource}`));
+      const ocr = new Ocr(imageSource);
       const result = await ocr.extractTextFromImage({ format });
 
       if (result) {

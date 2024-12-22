@@ -19,20 +19,22 @@ import { anthropic } from "@ai-sdk/anthropic";
 import { OcrFormat, ocrResponseSchema as schema } from "./models";
 import chalk from "chalk";
 import { getOCRPromptMessages } from "./prompts";
+import axios from "axios";
+import { Common } from "./common";
 
 /**
  * Core OCR class for handling image-to-text conversion
  * @class Ocr
  */
 export class Ocr {
-  private imagePath: string;
+  private imageSource: string;
 
   /**
    * Creates an instance of the OCR processor
-   * @param imagePath Path to the image file to process
+   * @param imageSource Path to the image file to process
    */
-  constructor(imagePath: string) {
-    this.imagePath = imagePath;
+  constructor(imageSource: string) {
+    this.imageSource = imageSource;
   }
 
   /**
@@ -40,8 +42,17 @@ export class Ocr {
    * @returns Promise<boolean> True if file exists, false otherwise
    */
   public async checkImageExistence(): Promise<boolean> {
+    if (Common.isUrl(this.imageSource)) {
+      try {
+        const response = await axios.head(this.imageSource);
+        return response.status === 200;
+      } catch {
+        return false;
+      }
+    }
+
     return fs
-      .access(this.imagePath)
+      .access(this.imageSource)
       .then(() => true)
       .catch(() => false);
   }
@@ -50,12 +61,28 @@ export class Ocr {
    * Loads and converts image to base64 format
    * @private
    * @returns Promise<string> Base64 encoded image data
-   * @throws Error if file reading fails
+   * @throws Error if file reading or URL fetching fails
    */
   private async loadImageBase64(): Promise<string> {
-    const image = await fs.readFile(this.imagePath);
-    const base64Image = image.toString("base64");
-    return base64Image;
+    if (Common.isUrl(this.imageSource)) {
+      try {
+        const response = await axios.get(this.imageSource, {
+          responseType: "arraybuffer",
+        });
+        const buffer = Buffer.from(response.data, "binary");
+        return buffer.toString("base64");
+      } catch (error: any) {
+        throw new Error(`Failed to fetch image from URL: ${error.message}`);
+      }
+    }
+
+    // Handle local file
+    try {
+      const image = await fs.readFile(this.imageSource);
+      return image.toString("base64");
+    } catch (error: any) {
+      throw new Error(`Failed to read local image file: ${error.message}`);
+    }
   }
 
   /**
