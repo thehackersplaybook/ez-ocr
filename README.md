@@ -9,6 +9,8 @@
 
 ## Introduction 🖋️
 
+> OCR, or Optical Character Recognition, is like teaching a computer to read. It looks at a picture of text (like from a book page or a sign), figures out the letters and words, and turns them into editable digital text you can use on your computer or phone. It's how your phone can scan a receipt or a handwritten note and let you copy or search the words.
+
 **THP-OCR** is a lightweight, Gen AI-powered OCR library designed for TypeScript (Node.js) and Python (coming soon). With it's support for frontier models like GPT-4O by OpenAI and Claude 3.5 Sonnet by Anthropic, thp-ocr is designed to be powerful and easily adoptable into the usual Gen AI workflows. ✨
 
 Built at [_The Hackers Playbook_](<[https://www.linkedin.com/in/thehackersplaybook](https://www.linkedin.com/company/the-hackers-playbook/)>), it helps extract text from handwritten notes, scanned documents, and complex diagrams, making raw data accessible for workflows. At THP, we're building large-scale knowledge harnessing systems to support our mission of educating and upskilling the global tech workforce. 🚀
