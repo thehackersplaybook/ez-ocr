@@ -107,7 +107,7 @@ export class Cli {
 
       console.log(chalk.green(`Processing image: ${imageSource}`));
       const ocr = new Ocr(imageSource);
-      const result = await ocr.extractTextFromImage({ format });
+      const result = await ocr.extract({ format });
 
       if (result) {
         this.displayResult(result, format);

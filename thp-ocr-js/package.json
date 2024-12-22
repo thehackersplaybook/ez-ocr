@@ -1,21 +1,32 @@
 {
-  "name": "thp-ocr-js",
+  "name": "thp-ocr",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "AI-Powered OCR using Claude 3.5 Sonnet",
+  "main": "dist/index.js",
+  "types": "types/index.d.ts",
+  "bin": {
+    "thp-ocr": "./dist/bin.js"
+  },
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node dist/index.js",
-    "start:test": "npm run build && node dist/index.js test.png",
-    "test": "vitest --silent --testTimeout 60000",
-    "watch": "tsc --watch",
-    "nodemon:watch": "nodemon --watch dist dist/index.js",
-    "dev": "concurrently \"npm run watch\" \"npm run nodemon:watch\"",
-    "test:coverage": "vitest run --coverage --testTimeout 60000"
+    "start": "node dist/bin.js",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "files": [
+    "dist",
+    "types",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "ocr",
+    "ai",
+    "claude",
+    "text-extraction",
+    "image-processing"
+  ],
+  "author": "Aditya Patange <contact.adityapatange@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "@ai-sdk/anthropic": "^1.0.6",
     "@ai-sdk/openai": "^1.0.11",
@@ -28,8 +39,5 @@
     "typescript": "^5.7.2",
     "vitest": "^2.1.8",
     "zod": "^3.24.1"
-  },
-  "devDependencies": {
-    "@vitest/coverage-v8": "^2.1.8"
   }
 }

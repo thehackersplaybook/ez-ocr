@@ -16,7 +16,7 @@
 import fs from "fs/promises";
 import { generateObject } from "ai";
 import { anthropic } from "@ai-sdk/anthropic";
-import { OcrFormat, ocrResponseSchema as schema } from "./models";
+import { OcrFormat, OcrOptions, ocrResponseSchema as schema } from "./models";
 import chalk from "chalk";
 import { getOCRPromptMessages } from "./prompts";
 import axios from "axios";
@@ -41,7 +41,7 @@ export class Ocr {
    * Validates if the image file exists
    * @returns Promise<boolean> True if file exists, false otherwise
    */
-  public async checkImageExistence(): Promise<boolean> {
+  private async checkImageExistence(): Promise<boolean> {
     if (Common.isUrl(this.imageSource)) {
       try {
         const response = await axios.head(this.imageSource);
@@ -121,13 +121,11 @@ export class Ocr {
    *
    * @example
    * const ocr = new Ocr("image.png");
-   * const text = await ocr.extractTextFromImage({ format: "text" });
+   * const text = await ocr.extract({ format: "text" });
    */
-  public async extractTextFromImage({
+  public async extract({
     format = "text",
-  }: {
-    format?: OcrFormat;
-  }): Promise<string | Record<string, string> | null> {
+  }: OcrOptions): Promise<string | Record<string, string> | null> {
     const imageBase64 = await this.loadImageBase64();
     const ocrResult = await this.aiOCR(imageBase64, format);
 

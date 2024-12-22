@@ -9,3 +9,7 @@ export interface OcrResponse {
 export const ocrResponseSchema = z.object({
   response: z.string(),
 });
+
+export interface OcrOptions {
+  format?: OcrFormat;
+}
