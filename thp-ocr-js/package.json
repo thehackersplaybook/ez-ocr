@@ -5,6 +5,7 @@
   "scripts": {
     "build": "tsc",
     "start": "npm run build && node dist/index.js",
+    "start:test": "npm run build && node dist/index.js test.png",
     "test": "vitest --silent --testTimeout 60000",
     "watch": "tsc --watch",
     "nodemon:watch": "nodemon --watch dist dist/index.js",
@@ -24,7 +25,8 @@
     "dotenv": "^16.4.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.8",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^2.1.8"
